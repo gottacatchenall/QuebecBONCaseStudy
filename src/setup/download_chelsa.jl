@@ -1,11 +1,13 @@
 
 const URL_BASE = "https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/"
+const CLIMATE_MODEL = "GFDL-ESM4"
+
+
 
 function download_chelsa()    
     run(`mkdir -p $(joinpath(datadir(), CHELSA_RAW_DIR))`)
-
+    @info "Downloading $y, $s, $l"
     for y in CHELSA_YEARS, s in SSPs, l in 1:19
-        @info "Downloading $y, $s, $l"
         outpath = raw_layer_path(y,s,l)
         Downloads.download(layer_url(y,s,l), outpath)
     end 
