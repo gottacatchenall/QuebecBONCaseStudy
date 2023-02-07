@@ -7,7 +7,7 @@ const SSPs = ["ssp126", "ssp370", "ssp585"]
 
 
 function download_chelsa()    
-    run(`mkdir -p $(joinpath(datadir(), "CHELSA_raw"))`)
+    run(`mkdir -p $(joinpath(datadir(), CHELSA_RAW_DIR))`)
 
     for y in CHELSA_YEARS, s in SSPs, l in 1:19
         outpath = raw_layer_path(y,s,l)
@@ -16,6 +16,7 @@ function download_chelsa()
 end
 
 load_chelsa_layer(y,s,l,bounds) = geotiff(SimpleSDMPredictor, raw_layer_path(y,s,l); bounds...)
+
 
 function load_chelsa(bounds)
     dict = Dict()
@@ -34,7 +35,7 @@ end
 
 
 
-raw_layer_path(y,s,l) = joinpath(datadir(), "CHELSA_raw", y, s, "layer_$l.tif")
+raw_layer_path(y,s,l) = joinpath(datadir(), CHELSA_RAW_DIR, y, s, "layer_$l.tif")
 
 layer_url(year, ssp, layernum) = string(
            URL_BASE, 

@@ -1,7 +1,6 @@
 function preallocate_layers(bounds, n=19)
-    templatepath = joinpath(datadir(), "CHELSA", "templates", "template.tif")
-    
-    template = geotiff(templatepath; bounds...)
+    templatepath = joinpath(datadir(), CHELSA_MASKED_DIR, "templates", "template.tif")
+    template = geotiff(SimpleSDMPredictor,templatepath; bounds...)
 
     layers = []
     for l in 1:n

@@ -6,7 +6,7 @@ println(
 """
 
 """
-)
+) 
 
 
 
@@ -19,6 +19,11 @@ const bounds = (top=67.0, bottom=65.0, left=-133.0, right=-132.0)
 
 const CHELSA_YEARS = ["2011-2040", "2041-2070", "2071-2100"]
 const SSPs = ["ssp126", "ssp370", "ssp585"]
+
+const CHELSA_RAW_DIR = "CHELSA_raw"
+const CHELSA_MASKED_DIR = "CHELSA_masked"
+const CHELSA_DECORRELATED_DIR = "CHELSA_decorrelated"
+
 
 make_template_layer(bounds)
 mask_chelsa(bounds)
