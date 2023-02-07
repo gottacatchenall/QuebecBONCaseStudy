@@ -24,6 +24,7 @@ const CHELSA_RAW_DIR = "CHELSA_raw"
 const CHELSA_MASKED_DIR = "CHELSA_masked"
 const CHELSA_DECORRELATED_DIR = "CHELSA_decorrelated"
 
+const OCCURRENCE_DATA_DIR = "occurrence_clean"
 
 make_template_layer(bounds)
 mask_chelsa(bounds)
