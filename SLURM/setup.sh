@@ -5,7 +5,7 @@
 #SBATCH --account=def-gonzalez
 #SBATCH --mem=128G
 
-export JULIA_DEPOT_PATH = "/project/def-gonzalez/mcathcne/JuliaEnvironments/"
+export JULIA_DEPOT_PATH = "/project/def-gonzalez/mcatchen/JuliaEnvironments/"
 
 module load julia/1.8.1
 julia ../scripts/setup.jl
