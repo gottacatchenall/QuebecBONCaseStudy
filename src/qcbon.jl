@@ -28,6 +28,6 @@ module QCBON
     include("setup/convert_occurrence_to_tif.jl")
 
 
-
+    export download_chelsa, download_water_cover
     export make_template_layer, mask_chelsa, decorrelate_chelsa, convert_occurrence_to_tifs
 end
