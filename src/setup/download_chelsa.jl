@@ -6,10 +6,17 @@ const CLIMATE_MODEL = "GFDL-ESM4"
 
 function download_chelsa()    
     run(`mkdir -p $(joinpath(datadir(), CHELSA_RAW_DIR))`)
-    for y in CHELSA_YEARS, s in SSPs, l in 1:19
-        @info "Downloading $y, $s, $l"
-        outpath = raw_layer_path(y,s,l)
-        Downloads.download(layer_url(y,s,l), outpath)
+    for y in CHELSA_YEARS
+        run(`mkdir -p $(joinpath(datadir(), CHELSA_RAW_DIR, y))`)
+        for s in SSPs
+            run(`mkdir -p $(joinpath(datadir(), CHELSA_RAW_DIR, y,s))`)
+            for l in 1:19
+                
+                @info "Downloading $y, $s, $l"
+                outpath = raw_layer_path(y,s,l)
+                Downloads.download(layer_url(y,s,l), outpath)
+            end
+        end
     end 
 end
 
