@@ -1,10 +1,5 @@
 
 const URL_BASE = "https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/"
-const CLIMATE_MODEL = "GFDL-ESM4"
-const CHELSA_YEARS = ["2011-2040", "2041-2070", "2071-2100"]
-const SSPs = ["ssp126", "ssp370", "ssp585"]
-
-
 
 function download_chelsa()    
     run(`mkdir -p $(joinpath(datadir(), CHELSA_RAW_DIR))`)

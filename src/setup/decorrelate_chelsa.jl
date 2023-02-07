@@ -7,6 +7,8 @@ function decorrelate_chelsa(bounds)
 
     get_matrix_form!(layers, Is, matrix)
     matrix = convert.(Float32, matrix)
+
+    @info "\t Fitting whitening..."
     w = fit_whitening(matrix)
 
     apply_and_write_decorrelated_chelsa(w, layers, matrix, bounds)
@@ -17,8 +19,10 @@ function apply_and_write_decorrelated_chelsa(w, layers, matrix, bounds)
     tmp = similar(layers[begin])
 
     for y in CHELSA_YEARS
+        @info "\t Applying to $y"
         run(`mkdir -p $(joinpath(datadir(), CHELSA_DECORRELATED_DIR, y))`)
         for s in SSPs
+            @info "\t\t $s"
             run(`mkdir -p $(joinpath(datadir(), CHELSA_DECORRELATED_DIR, y,s))`)
             load_masked_chelsa_layers!(y, s, bounds, layers)
             Is = common_Is(layers)

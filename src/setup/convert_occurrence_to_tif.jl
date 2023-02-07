@@ -3,7 +3,6 @@ function convert_occurrence_to_tifs()
     csvs = readdir(parentdir)
 
     tmp = geotiff(SimpleSDMPredictor, get_template_path())
-    
     run(`mkdir -p $(joinpath(datadir(), "occurrence_tifs"))`)
 
     for csv in csvs
@@ -12,17 +11,17 @@ function convert_occurrence_to_tifs()
         df = CSV.read(joinpath(parentdir, csv), DataFrame)
         
         species = unique(df.species)
-
+        @info "\t", group
         for s in species
-            tmp.grid .= 0
+            tmp.grid .= 0.
             thisdf = filter(r->r.species == s, df)
 
 
             for r in eachrow(thisdf)
                 lat, long = Float32.([r.latitude, r.longitude])
                 if check_inbounds(tmp, lat,long)
-                    #_point_to_cartesian(layer, Point(long,lat))
-                    tmp[Point(long,lat)] = 1
+                    i = SimpleSDMLayers._point_to_cartesian(tmp, Point(long,lat))
+                    tmp.grid[i] = 1.
                 end
             end
 

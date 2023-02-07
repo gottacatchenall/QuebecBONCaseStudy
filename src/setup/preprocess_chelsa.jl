@@ -5,8 +5,11 @@ function mask_chelsa(bounds)
     #CHELSA_processed
 
     for y in CHELSA_YEARS
+        @info "\t Applying to $y"
+
         run(`mkdir -p $(joinpath(datadir(), CHELSA_MASKED_DIR, y))`)
         for s in SSPs
+            @info "\t\t $s"
             run(`mkdir -p $(joinpath(datadir(), CHELSA_MASKED_DIR, y, s))`)
             for l in 1:19
                 layer = load_chelsa_layer(y,s,l,bounds)
