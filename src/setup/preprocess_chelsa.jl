@@ -7,10 +7,10 @@ function mask_chelsa(bounds)
     for y in CHELSA_YEARS
         @info "\t Applying to $y"
 
-        run(`mkdir -p $(joinpath(datadir(), CHELSA_MASKED_DIR, y))`)
+        run(`mkdir -p $(joinpath(DATA_DIR, CHELSA_MASKED_DIR, y))`)
         for s in SSPs
             @info "\t\t $s"
-            run(`mkdir -p $(joinpath(datadir(), CHELSA_MASKED_DIR, y, s))`)
+            run(`mkdir -p $(joinpath(DATA_DIR, CHELSA_MASKED_DIR, y, s))`)
             for l in 1:19
                 layer = load_chelsa_layer(y,s,l,bounds)
                 geotiff(masked_layer_path(y,s,l), convert(Float32, mask(geotiff(SimpleSDMPredictor, watermask; bounds...),layer)))
@@ -20,7 +20,7 @@ function mask_chelsa(bounds)
 
 end
 
-masked_layer_path(y,s,l) = joinpath(datadir(), CHELSA_MASKED_DIR, y, s, "layer_$l.tif")
+masked_layer_path(y,s,l) = joinpath(DATA_DIR, CHELSA_MASKED_DIR, y, s, "layer_$l.tif")
 
 
 function load_masked_chelsa_layer!(y,s,l,bounds,layer)

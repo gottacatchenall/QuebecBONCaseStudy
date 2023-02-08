@@ -20,10 +20,10 @@ function apply_and_write_decorrelated_chelsa(w, layers, matrix, bounds)
 
     for y in CHELSA_YEARS
         @info "\t Applying to $y"
-        run(`mkdir -p $(joinpath(datadir(), CHELSA_DECORRELATED_DIR, y))`)
+        run(`mkdir -p $(joinpath(DATA_DIR, CHELSA_DECORRELATED_DIR, y))`)
         for s in SSPs
             @info "\t\t $s"
-            run(`mkdir -p $(joinpath(datadir(), CHELSA_DECORRELATED_DIR, y,s))`)
+            run(`mkdir -p $(joinpath(DATA_DIR, CHELSA_DECORRELATED_DIR, y,s))`)
             load_masked_chelsa_layers!(y, s, bounds, layers)
             Is = common_Is(layers)
             get_matrix_form!(layers, Is, matrix)
@@ -41,7 +41,7 @@ function apply_and_write_decorrelated_chelsa(w, layers, matrix, bounds)
     end
 end
 
-decorrelated_chelsa_path(y,s,l) = joinpath(datadir(), CHELSA_DECORRELATED_DIR, y,s, string("$l.tif"))
+decorrelated_chelsa_path(y,s,l) = joinpath(DATA_DIR, CHELSA_DECORRELATED_DIR, y,s, string("$l.tif"))
 
 function fit_whitening(matrix)
     w = MultivariateStats.fit(Whitening, matrix)

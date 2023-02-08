@@ -4,8 +4,8 @@ const filenames = ["amphib", "angio", "arthro", "bryophytes", "conifers", "fungi
 _nevermind_the_bollocks(str) = uppercasefirst(lowercase(string(split(str, " ")[1], " ", split(str, " ")[2])))
 
 function clean_occurrence()
-    indirpath = joinpath(datadir(), "occurrence_raw")   
-    outdirpath = joinpath(datadir(), "occurrence_clean")   
+    indirpath = joinpath(DATA_DIR, "occurrence_raw")   
+    outdirpath = joinpath(DATA_DIR, "occurrence_clean")   
     run(`mkdir -p $outdirpath`)
 
     for f in filenames

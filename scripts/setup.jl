@@ -2,7 +2,6 @@ using DrWatson
 @quickactivate "QuebecBONCasestudy"
 
 using SimpleSDMLayers
-using DrWatson
 using ArchGDAL
 using DataFrames, CSV
 using Downloads
@@ -17,26 +16,32 @@ const CHELSA_MASKED_DIR = "CHELSA_masked"
 const CHELSA_DECORRELATED_DIR = "CHELSA_decorrelated"
 const OCCURRENCE_DATA_DIR = "occurrence_clean"
 
-include(joinpath(srcdir(), "setup", "download_chelsa.jl"))
-include(joinpath(srcdir(), "setup", "download_water_cover.jl"))
-include(joinpath(srcdir(), "setup","clean_occurrence.jl"))
-include(joinpath(srcdir(), "setup","make_template_layer.jl"))
-include(joinpath(srcdir(), "setup","preallocate_layers.jl"))
-include(joinpath(srcdir(), "setup","preprocess_chelsa.jl"))
-include(joinpath(srcdir(), "setup","decorrelate_chelsa.jl"))
-include(joinpath(srcdir(), "setup","convert_occurrence_to_tif.jl"))
+const SRC_DIR = joinpath(pwd(), "..", "src")
+const DATA_DIR = joinpath(pwd(), "..", "data")
+
+println("starting include")
+include(joinpath(SRC_DIR, "setup", "download_chelsa.jl"))
+include(joinpath(SRC_DIR, "setup", "download_water_cover.jl"))
+include(joinpath(SRC_DIR, "setup","clean_occurrence.jl"))
+include(joinpath(SRC_DIR, "setup","make_template_layer.jl"))
+include(joinpath(SRC_DIR, "setup","preallocate_layers.jl"))
+include(joinpath(SRC_DIR, "setup","preprocess_chelsa.jl"))
+include(joinpath(SRC_DIR, "setup","decorrelate_chelsa.jl"))
+include(joinpath(SRC_DIR, "setup","convert_occurrence_to_tif.jl"))
+println("ending include")
 
 
-@info "Making template layer..."
+println("Making template layer...")
 make_template_layer(bounds)
 
-@info "Masking chelsa layers..."
+println("Masking chelsa layers...")
 mask_chelsa(bounds)
 
-@info "Decorrelating chelsa layers..."
+
+println("Decorrelating chelsa layers...")
 decorrelate_chelsa(bounds)
 
-@info "Converting occurrences to tifs..."
+println("Converting occurrences to tifs...")
 convert_occurrence_to_tifs()
 
 

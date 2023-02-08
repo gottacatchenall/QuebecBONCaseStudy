@@ -1,6 +1,6 @@
 
 function make_template_layer(bounds)    
-    dirpath = joinpath(datadir(), CHELSA_MASKED_DIR, "templates")
+    dirpath = joinpath(DATA_DIR, CHELSA_MASKED_DIR, "templates")
 
     watercover_path = joinpath(dirpath, "watercover.tif")  
     
@@ -24,7 +24,7 @@ function make_template_layer(bounds)
     geotiff(template_path, template)
 end
 
-get_template_path() = joinpath(datadir(), CHELSA_MASKED_DIR, "templates", "template.tif")
+get_template_path() = joinpath(DATA_DIR, CHELSA_MASKED_DIR, "templates", "template.tif")
 
 
 

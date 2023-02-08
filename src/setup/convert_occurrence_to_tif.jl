@@ -1,13 +1,13 @@
 function convert_occurrence_to_tifs()
-    parentdir = joinpath(datadir(), OCCURRENCE_DATA_DIR)
+    parentdir = joinpath(DATA_DIR, OCCURRENCE_DATA_DIR)
     csvs = readdir(parentdir)
 
     tmp = geotiff(SimpleSDMPredictor, get_template_path())
-    run(`mkdir -p $(joinpath(datadir(), "occurrence_tifs"))`)
+    run(`mkdir -p $(joinpath(DATA_DIR, "occurrence_tifs"))`)
 
     for csv in csvs
         group  = convert(String, split(csv,".")[1])
-        run(`mkdir -p $(joinpath(datadir(), "occurrence_tifs", group))`)
+        run(`mkdir -p $(joinpath(DATA_DIR, "occurrence_tifs", group))`)
         df = CSV.read(joinpath(parentdir, csv), DataFrame)
         
         species = unique(df.species)
@@ -25,7 +25,7 @@ function convert_occurrence_to_tifs()
                 end
             end
 
-            outpath = joinpath(datadir(), "occurrence_tifs", group, string(s, ".tif"))
+            outpath = joinpath(DATA_DIR, "occurrence_tifs", group, string(s, ".tif"))
             geotiff(outpath, tmp)
         end
     end
