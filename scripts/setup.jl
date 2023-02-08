@@ -2,7 +2,6 @@ using DrWatson
 @quickactivate "QuebecBONCasestudy"
 
 include(joinpath(srcdir(), "qcbon.jl"))
-using Main.QCBON
 
 
 @info "Making template layer..."
