@@ -5,6 +5,7 @@ const CLIMATE_MODEL = "GFDL-ESM4"
 
 
 function download_chelsa()    
+    println("\n\n chelsa download dir  $(joinpath(DATA_DIR, CHELSA_RAW_DIR))) \n\n")
     run(`mkdir -p $(joinpath(DATA_DIR, CHELSA_RAW_DIR))`)
     for y in CHELSA_YEARS
         run(`mkdir -p $(joinpath(DATA_DIR, CHELSA_RAW_DIR, y))`)

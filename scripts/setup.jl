@@ -1,5 +1,5 @@
 using DrWatson
-@quickactivate "QuebecBONCasestudy"
+#@quickactivate "QuebecBONCasestudy"
 
 using SimpleSDMLayers
 using ArchGDAL
