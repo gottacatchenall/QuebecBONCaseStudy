@@ -8,6 +8,6 @@
 export JULIA_DEPOT_PATH = "/project/def-gonzalez/mcatchen/JuliaEnvironments/QCBON"
 
 module load julia/1.8.1
-julia ../scripts/setup.jl
+julia --project=/project/def-gonzalez/mcatchen/QuebecBONCaseStudy ../scripts/setup.jl
 
 echo "exiting"
