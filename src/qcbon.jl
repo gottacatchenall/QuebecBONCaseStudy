@@ -65,6 +65,7 @@ module QCBON
 
     export get_template_path, decorrelated_chelsa_path
     export check_inbounds
+    export common_Is
     export download_chelsa, download_water_cover
     export make_template_layer, mask_chelsa, decorrelate_chelsa, convert_occurrence_to_tifs
 end

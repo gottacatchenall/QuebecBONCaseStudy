@@ -23,7 +23,9 @@ function fit_and_project(group,species)
     run(`mkdir -p $(joinpath(datadir(), SDMS_DIR, group))`)
     run(`mkdir -p $(joinpath(datadir(), SDMS_DIR, group, species))`)
 
-    prediction, uncertainty = predict_sdm(climate_layers, model)
+    I = common_Is(climate_layers)
+
+    prediction, uncertainty = predict_sdm(climate_layers, model,I)
     dict = compute_fit_stats_and_cutoff(prediction, xy, y)
 
     write_stats(dict, joinpath(datadir(), SDMS_DIR, group, species, "fit.json"))
@@ -35,7 +37,8 @@ function fit_and_project(group,species)
             run(`mkdir -p $(joinpath(datadir(),SDMS_DIR, group, species, y, s))`)
 
             theselayers = [geotiff(SimpleSDMPredictor, decorrelated_chelsa_path(y,s,l)) for l in 1:19]
-            prediction, uncertainty = predict_sdm(theselayers, model)
+            I = common_Is(theselayers)
+            prediction, uncertainty = predict_sdm(theselayers, model,I)
 
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
@@ -77,10 +80,9 @@ function fit_sdm(presences, absences, climate_layers)
     xy_presence = keys(replace(presences, false => nothing));
     xy_absence = keys(replace(absences, false => nothing));
     xy = vcat(xy_presence, xy_absence);
+
     
     X = hcat([layer[xy] for layer in climate_layers]...);
-
-
     y = vcat(fill(1.0, length(xy_presence)), fill(0.0, length(xy_absence)));
     
     train_size = floor(Int, 0.7 * length(y));
@@ -100,8 +102,18 @@ function fit_sdm(presences, absences, climate_layers)
     return model, xy, y, xy_presence, presences
 end
 
-function predict_sdm(climate_layers, model)
-    all_values = hcat([layer[keys(layer)] for layer in climate_layers]...);
+function predict_sdm(climate_layers, model, I)
+    # Build this smarter
+    #all_values = hcat([layer[keys(layer)] for layer in climate_layers]...);
+
+    all_values = zeros(Float32,length(I), length(climate_layers))
+
+    for (i, idx) in enumerate(I)
+        for l in 1:length(climate_layers)
+            all_values[i,l] = climate_layers[l].grid[idx]     
+        end 
+    end
+
     pred = EvoTrees.predict(model, all_values);
     distribution = similar(climate_layers[1], Float64)
     distribution[keys(distribution)] = pred[:, 1]
