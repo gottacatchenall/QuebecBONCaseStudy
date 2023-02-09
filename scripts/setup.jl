@@ -14,8 +14,8 @@ mask_chelsa(bounds)
 @info "Decorrelating chelsa layers..."
 decorrelate_chelsa(bounds)
 
-@info "Converting occurrences to tifs..."
-convert_occurrence_to_tifs()
+#@info "Converting occurrences to tifs..."
+#convert_occurrence_to_tifs()
 
 
 #=

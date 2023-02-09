@@ -14,8 +14,7 @@ function fit_and_project_sdms()
 end
 
 function fit_and_project(group,species)
-    occ_layer = geotiff(SimpleSDMPredictor, occurrence_tif_path(group,species))
-
+    occ_layer = get_presences(group, species)
     climate_layers = load_fit_layers()
 
     pres, abs = get_pres_and_abs(occ_layer)
@@ -44,26 +43,48 @@ function fit_and_project(group,species)
     end
 end
 
-function get_pres_and_abs(occurrence_layer)
+function get_presences(group, species)
+    df = CSV.read(joinpath(datadir(), OCCURRENCE_DATA_DIR, "$group.csv"), DataFrame)
+    thisdf = filter(r->r.species == species, df)
     template = geotiff(SimpleSDMPredictor, get_template_path())
-    @info template, occurrence_layer
-    presences = convert(Bool, mask(template, occurrence_layer))
+
+    thissp = similar(template)
+    thissp.grid[findall(isnothing, thissp.grid)] .= nothing
+    I = findall(!isnothing, thissp.grid)
+    thissp.grid[I] .= false
+    thissp = convert(Bool, thissp)
+    for r in eachrow(thisdf)
+        lat, long = Float32.([r.latitude, r.longitude])
+        if check_inbounds(thissp, lat,long)
+            i = SimpleSDMLayers._point_to_cartesian(thissp, Point(long,lat))
+            thissp.grid[i] = 1
+        end
+    end
+    thissp
+end 
+
+
+function get_pres_and_abs(presences)
     absences = rand(SurfaceRangeEnvelope, presences)
     presences, absences 
 end 
 
 function fit_sdm(presences, absences, climate_layers)
-    
+    presences = mask(presences, climate_layers[begin])
     xy_presence = keys(replace(presences, false => nothing));
     xy_absence = keys(replace(absences, false => nothing));
     xy = vcat(xy_presence, xy_absence);
     
     X = hcat([layer[xy] for layer in climate_layers]...);
+
+
     y = vcat(fill(1.0, length(xy_presence)), fill(0.0, length(xy_absence)));
     
     train_size = floor(Int, 0.7 * length(y));
     train_idx = StatsBase.sample(1:length(y), train_size; replace=false);
     test_idx = setdiff(1:length(y), train_idx);
+
+
     Xtrain, Xtest = X[train_idx, :], X[test_idx, :];
     Ytrain, Ytest = y[train_idx], y[test_idx];
 
