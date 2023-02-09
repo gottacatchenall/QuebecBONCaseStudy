@@ -14,8 +14,8 @@ function fit_and_project_sdms()
 end
 
 function fit_and_project(group,species)
-    occ_layer = get_presences(group, species)
     climate_layers = load_fit_layers()
+    occ_layer = get_presences(group, species, climate_layers[begin])
 
     pres, abs = get_pres_and_abs(occ_layer)
     model, xy, y, xy_pres, pres = fit_sdm(pres, abs, climate_layers)
@@ -43,10 +43,9 @@ function fit_and_project(group,species)
     end
 end
 
-function get_presences(group, species)
+function get_presences(group, species, template)
     df = CSV.read(joinpath(datadir(), OCCURRENCE_DATA_DIR, "$group.csv"), DataFrame)
     thisdf = filter(r->r.species == species, df)
-    template = geotiff(SimpleSDMPredictor, get_template_path())
 
     thissp = similar(template)
     thissp.grid[findall(isnothing, thissp.grid)] .= nothing
