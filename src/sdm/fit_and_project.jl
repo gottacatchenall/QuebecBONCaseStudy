@@ -46,6 +46,7 @@ end
 
 function get_pres_and_abs(occurrence_layer)
     template = geotiff(SimpleSDMPredictor, get_template_path())
+    @info template, occurrence_layer
     presences = convert(Bool, mask(template, occurrence_layer))
     absences = rand(SurfaceRangeEnvelope, presences)
     presences, absences 
