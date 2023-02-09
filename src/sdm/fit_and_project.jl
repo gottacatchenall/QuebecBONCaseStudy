@@ -48,9 +48,11 @@ function get_presences(group, species, template)
     thisdf = filter(r->r.species == species, df)
 
     thissp = similar(template)
-    thissp.grid[findall(isnothing, thissp.grid)] .= nothing
-    I = findall(!isnothing, thissp.grid)
-    thissp.grid[I] .= false
+
+   # thissp.grid[findall(isnothing, thissp.grid)] .= nothing
+   # I = findall(!isnothing, thissp.grid)
+    thissp.grid .= false
+
     thissp = convert(Bool, thissp)
     for r in eachrow(thisdf)
         lat, long = Float32.([r.latitude, r.longitude])
@@ -70,6 +72,8 @@ end
 
 function fit_sdm(presences, absences, climate_layers)
     presences = mask(presences, climate_layers[begin])
+    absences = mask(absences, climate_layers[begin])
+
     xy_presence = keys(replace(presences, false => nothing));
     xy_absence = keys(replace(absences, false => nothing));
     xy = vcat(xy_presence, xy_absence);
