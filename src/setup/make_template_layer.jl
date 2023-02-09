@@ -11,8 +11,7 @@ function make_template_layer(bounds)
 
     Iwater = findall(x->x==100., water.grid)
 
-    I = CartesianIndices(size(water.grid))
-    #Iland = filter(i-> i ∉ Iwater, I)
+     #Iland = filter(i-> i ∉ Iwater, I)
 
 
     template = similar(tmp)
