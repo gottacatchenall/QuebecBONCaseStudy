@@ -50,8 +50,8 @@ function fit_and_project(group,species, qc)
     
             f_prediction, f_uncert = make_map(prediction, species), make_map(uncertainty, species, :viridis)
 
-            predict_path = joinpath(plotsidr(),SDMS_DIR, group, species, y, s, "sdm.png")
-            uncert_path = joinpath(plotsidr(),SDMS_DIR, group, species, y, s, "uncertainty.png")
+            predict_path = joinpath(plotsdir(),SDMS_DIR, group, species, y, s, "sdm.png")
+            uncert_path = joinpath(plotsdir(),SDMS_DIR, group, species, y, s, "uncertainty.png")
 
             save(predict_path, f_prediction)
             save(uncert_path, f_uncert)
