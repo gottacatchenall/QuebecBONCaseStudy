@@ -10,7 +10,7 @@ function fit_and_project_sdms()
 
     qc_mask = mask(qc, climate_layers[begin])
 
-    qc_mask = clip(qc_mask; QCbounds...)
+    #qc_mask = clip(qc_mask; QCbounds...)
     #Imask = findall(isnothing, qc.grid) 
 
     for (i,species) in enumerate(speciessets)
@@ -63,8 +63,8 @@ function fit_and_project(group,species, qc, climate_layers, I)
 
             #qc_mask = clip(qc, prediction)
 
-            prediction = mask(qc,prediction)
-            uncertainty = mask(qc,uncertainty)
+            prediction = clip(mask(qc,prediction); QCbounds...)
+            uncertainty = clip(mask(qc,uncertainty); QCbounds...)
 
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
