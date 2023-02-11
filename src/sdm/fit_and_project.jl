@@ -3,17 +3,18 @@ function fit_and_project_sdms()
 
     groups = get_species_groups()
     speciessets = get_species.(groups)
+    qc = geotiff(SimpleSDMPredictor, joinpath(datadir(), "qc_mask.tif"))
 
     for (i,species) in enumerate(speciessets)
         @info "\tGroup: $(groups[i])"
         for sp in species
             @info "\t\tSpecies: $sp"
-            fit_and_project(groups[i],sp)
+            fit_and_project(groups[i],sp, qc)
         end
     end
 end
 
-function fit_and_project(group,species)
+function fit_and_project(group,species, qc)
     climate_layers = load_fit_layers()
     occ_layer = get_presences(group, species, climate_layers[begin])
 
@@ -30,15 +31,34 @@ function fit_and_project(group,species)
 
     write_stats(dict, joinpath(datadir(), SDMS_DIR, group, species, "fit.json"))
 
+
+    bson_path = joinpath(datadir(), SDMS_DIR, group, species, "model.bson")
+    @save bson_path model
+
     for y in CHELSA_YEARS
         run(`mkdir -p $(joinpath(datadir(),SDMS_DIR, group, species, y))`)
+        run(`mkdir -p $(joinpath(plotsdir(),SDMS_DIR, group, species, y))`)
 
         for s in SSPs
             run(`mkdir -p $(joinpath(datadir(),SDMS_DIR, group, species, y, s))`)
+            run(`mkdir -p $(joinpath(plotsdir(),SDMS_DIR, group, species, y, s))`)
 
             theselayers = [geotiff(SimpleSDMPredictor, decorrelated_chelsa_path(y,s,l)) for l in 1:19]
             I = common_Is(theselayers)
             prediction, uncertainty = predict_sdm(theselayers, model,I)
+
+    
+            f_prediction, f_uncert = make_map(prediction, species), make_map(uncertainty, species, :viridis)
+
+            predict_path = joinpath(plotsidr(),SDMS_DIR, group, species, y, s, "sdm.png")
+            uncert_path = joinpath(plotsidr(),SDMS_DIR, group, species, y, s, "uncertainty.png")
+
+            save(predict_path, f_prediction)
+            save(uncert_path, f_uncert)
+
+
+            prediction = mask(qc,prediction)
+            uncertainty = mask(qc,uncertainty)
 
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
@@ -165,6 +185,36 @@ function write_stats(statsdict, path)
       JSON.print(f, json_string)
     end
 end 
+
+function make_map(layer, species, cs=:thermal)
+    fig = Figure()
+    panel = GeoAxis(
+        fig[1, 1];
+        source = "+proj=longlat +datum=WGS84",
+        dest = "+proj=ortho +lon_0=-90 -lat_0=60",
+        title=species,
+        spinewidth=0,
+        titlealign=:left,
+        lonlims = extrema(longitudes(sdm)),
+        latlims = extrema(latitudes(sdm)),
+    )
+    CairoMakie.heatmap!(
+        panel,
+        sprinkle(convert(Float32, sdm))...;
+        shading = false,
+        interpolate = false,
+        colormap = cs,
+    )
+    return fig
+end
+
+function sprinkle(layer::T) where {T <: SimpleSDMLayer}
+    return (
+        longitudes(layer),
+        latitudes(layer),
+        transpose(replace(layer.grid, nothing => NaN)),
+    )
+end
 
 load_fit_layers(y="2011-2040", s="ssp126") = [geotiff(SimpleSDMPredictor, decorrelated_chelsa_path(y,s,l)) for l in 1:19]
 get_species_groups() = readdir(occurrence_tifs_path())

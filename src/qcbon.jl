@@ -7,7 +7,12 @@ module QCBON
     using MultivariateStats
     using EvoTrees
     using StatsBase
+    using BSON: @save
     using JSON
+
+    using CairoMakie, GeoMakie
+
+    CairoMakie.activate!(; px_per_unit=2)
 
     const bounds = (top=67.0, bottom=23.0, left=-133.0, right=-50.0)
     #const bounds = (top=50.0, bottom=45.0, left=-70.0, right=-66.0)
