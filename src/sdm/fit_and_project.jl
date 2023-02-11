@@ -195,8 +195,8 @@ function make_map(layer, species, cs=:thermal)
         title=species,
         spinewidth=0,
         titlealign=:left,
-        lonlims = extrema(longitudes(sdm)),
-        latlims = extrema(latitudes(sdm)),
+        lonlims = extrema(longitudes(layer)),
+        latlims = extrema(latitudes(layer)),
     )
     CairoMakie.heatmap!(
         panel,
