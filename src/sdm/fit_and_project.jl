@@ -4,29 +4,31 @@ function fit_and_project_sdms()
     groups = get_species_groups()
     speciessets = get_species.(groups)
     qc = geotiff(SimpleSDMPredictor, joinpath(datadir(), "qc_mask_fixed.tif"))
+    climate_layers = load_fit_layers()
+    I = common_Is(climate_layers)
 
+
+    qc_mask = mask(qc, climate_layers[begin])
     #Imask = findall(isnothing, qc.grid) 
 
     for (i,species) in enumerate(speciessets)
         @info "\tGroup: $(groups[i])"
         for sp in species
             @info "\t\tSpecies: $sp"
-            fit_and_project(groups[i],sp, qc)
+            fit_and_project(groups[i], qc_mask, climate_layers)
         end
     end
 end
 
-function fit_and_project(group,species, qc)
-    climate_layers = load_fit_layers()
+function fit_and_project(group,species, qc, climate_layers, I)
+    
     occ_layer = get_presences(group, species, climate_layers[begin])
-
     pres, abs = get_pres_and_abs(occ_layer)
     model, xy, y, xy_pres, pres = fit_sdm(pres, abs, climate_layers)
     
     run(`mkdir -p $(joinpath(datadir(), SDMS_DIR, group))`)
     run(`mkdir -p $(joinpath(datadir(), SDMS_DIR, group, species))`)
 
-    I = common_Is(climate_layers)
 
     prediction, uncertainty = predict_sdm(climate_layers, model,I)
     dict = compute_fit_stats_and_cutoff(prediction, xy, y)
