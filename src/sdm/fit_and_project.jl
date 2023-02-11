@@ -15,7 +15,7 @@ function fit_and_project_sdms()
         @info "\tGroup: $(groups[i])"
         for sp in species
             @info "\t\tSpecies: $sp"
-            fit_and_project(groups[i], qc_mask, climate_layers)
+            fit_and_project(groups[i], qc_mask, climate_layers, I)
         end
     end
 end
