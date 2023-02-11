@@ -9,6 +9,8 @@ function fit_and_project_sdms()
 
 
     qc_mask = mask(qc, climate_layers[begin])
+
+    qc_mask = clip(qc_mask; QCbounds...)
     #Imask = findall(isnothing, qc.grid) 
 
     for (i,species) in enumerate(speciessets)

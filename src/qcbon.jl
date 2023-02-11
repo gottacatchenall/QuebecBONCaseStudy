@@ -16,7 +16,7 @@ module QCBON
 
     const bounds = (top=67.0, bottom=23.0, left=-133.0, right=-50.0)
     #const bounds = (top=50.0, bottom=45.0, left=-70.0, right=-66.0)
-   
+    const QCbounds = (left=-80., right=-55., bottom=42., top=67.)
    
     const CHELSA_YEARS = ["2011-2040", "2041-2070", "2071-2100"]
     const SSPs = ["ssp126", "ssp370", "ssp585"]
@@ -45,7 +45,7 @@ module QCBON
 
 
     export 
-        bounds, 
+        bounds, QCbounds,
         CHELSA_YEARS, 
         SSPs, 
         CHELSA_RAW_DIR, 
