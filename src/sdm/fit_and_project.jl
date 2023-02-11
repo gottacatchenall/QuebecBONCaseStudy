@@ -188,7 +188,7 @@ function write_stats(statsdict, path)
 end 
 
 function make_map(layer, species, cs=:thermal)
-    fig = Figure()
+    fig = Figure(dimensions=(1400, 1000))
     panel = GeoAxis(
         fig[1, 1];
         source = "+proj=longlat +datum=WGS84",
