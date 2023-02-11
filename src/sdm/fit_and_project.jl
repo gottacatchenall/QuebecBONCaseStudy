@@ -46,7 +46,6 @@ function fit_and_project(group,species, qc)
             run(`mkdir -p $(joinpath(plotsdir(),SDMS_DIR, group, species, y, s))`)
 
             theselayers = [geotiff(SimpleSDMPredictor, decorrelated_chelsa_path(y,s,l)) for l in 1:19]
-            I = common_Is(theselayers)
             prediction, uncertainty = predict_sdm(theselayers, model,I)
 
     
