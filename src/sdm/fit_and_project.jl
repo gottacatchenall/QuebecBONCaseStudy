@@ -5,6 +5,8 @@ function fit_and_project_sdms()
     speciessets = get_species.(groups)
     qc = geotiff(SimpleSDMPredictor, joinpath(datadir(), "qc_mask_fixed.tif"))
 
+    #Imask = findall(isnothing, qc.grid) 
+
     for (i,species) in enumerate(speciessets)
         @info "\tGroup: $(groups[i])"
         for sp in species
@@ -56,10 +58,10 @@ function fit_and_project(group,species, qc)
             save(predict_path, f_prediction)
             save(uncert_path, f_uncert)
 
-            qc_mask = clip(qc, prediction)
+            #qc_mask = clip(qc, prediction)
 
-            prediction = mask(qc_mask,prediction)
-            uncertainty = mask(qc_mask,uncertainty)
+            prediction = mask(qc,prediction)
+            uncertainty = mask(qc,uncertainty)
 
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
