@@ -33,6 +33,6 @@ function convert_occurrence_to_tifs()
 end
 
 function check_inbounds(tmp, lat, long)
-    bb = boundingbox(tmp)
+    bb = SimpleSDMLayers.boundingbox(tmp)
     lat > bb[:bottom] && lat < bb[:top] && long > bb[:left] && long < bb[:right]
 end 
