@@ -136,11 +136,11 @@ function predict_sdm(climate_layers, model, I)
 
     pred = EvoTrees.predict(model, all_values);
     distribution = similar(climate_layers[1], Float64)
-    distribution[keys(distribution)] = pred[:, 1]
+    distribution[I] = pred[:, 1]
     distribution
     
     uncertainty = similar(climate_layers[1], Float64)
-    uncertainty[keys(uncertainty)] = pred[:, 2]
+    uncertainty[I] = pred[:, 2]
     uncertainty
 
     return rescale(distribution, (0,1)), rescale(uncertainty, (0,1))
