@@ -200,7 +200,7 @@ function make_map(layer, species, cs=:thermal)
     )
     CairoMakie.heatmap!(
         panel,
-        sprinkle(convert(Float32, sdm))...;
+        sprinkle(convert(Float32, layer))...;
         shading = false,
         interpolate = false,
         colormap = cs,
