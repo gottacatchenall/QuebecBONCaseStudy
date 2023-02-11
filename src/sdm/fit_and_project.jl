@@ -56,9 +56,10 @@ function fit_and_project(group,species, qc)
             save(predict_path, f_prediction)
             save(uncert_path, f_uncert)
 
+            qc_mask = clip(qc, prediction)
 
-            prediction = mask(qc,prediction)
-            uncertainty = mask(qc,uncertainty)
+            prediction = mask(qc_mask,prediction)
+            uncertainty = mask(qc_mask,uncertainty)
 
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
             geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
