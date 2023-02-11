@@ -3,7 +3,7 @@ function fit_and_project_sdms()
 
     groups = get_species_groups()
     speciessets = get_species.(groups)
-    qc = geotiff(SimpleSDMPredictor, joinpath(datadir(), "qc_mask.tif"))
+    qc = geotiff(SimpleSDMPredictor, joinpath(datadir(), "qc_mask_fixed.tif"))
 
     for (i,species) in enumerate(speciessets)
         @info "\tGroup: $(groups[i])"
