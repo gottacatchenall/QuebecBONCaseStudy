@@ -35,10 +35,10 @@ function fit_and_project(group,species, qc, climate_layers, I)
     prediction, uncertainty = predict_sdm(climate_layers, model,I)
     dict = compute_fit_stats_and_cutoff(prediction, xy, y)
 
-    write_stats(dict, joinpath(datadir(), SDMS_DIR, group, species, "fit.json"))
+    write_stats(dict, joinpath("/scratch", "mcatchen", SDMS_DIR, group, species, "fit.json"))
 
 
-    bson_path = joinpath(datadir(), SDMS_DIR, group, species, "model.bson")
+    bson_path = joinpath("/scratch", "mcatchen",  SDMS_DIR, group, species, "model.bson")
     @save bson_path model
 
     for y in CHELSA_YEARS
