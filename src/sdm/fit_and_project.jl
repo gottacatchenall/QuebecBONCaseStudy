@@ -28,8 +28,8 @@ function fit_and_project(group,species, qc, climate_layers, I)
     pres, abs = get_pres_and_abs(occ_layer)
     model, xy, y, xy_pres, pres = fit_sdm(pres, abs, climate_layers)
     
-    run(`mkdir -p $(joinpath(datadir(), SDMS_DIR, group))`)
-    run(`mkdir -p $(joinpath(datadir(), SDMS_DIR, group, species))`)
+    run(`mkdir -p $(joinpath("/scratch", "mcatchen", SDMS_DIR, group))`)
+    run(`mkdir -p $(joinpath("/scratch", "mcatchen", SDMS_DIR, group, species))`)
 
 
     prediction, uncertainty = predict_sdm(climate_layers, model,I)
@@ -42,11 +42,11 @@ function fit_and_project(group,species, qc, climate_layers, I)
     @save bson_path model
 
     for y in CHELSA_YEARS
-        run(`mkdir -p $(joinpath(datadir(),SDMS_DIR, group, species, y))`)
+        run(`mkdir -p $(joinpath("/scratch", "mcatchen", SDMS_DIR, group, species, y))`)
         run(`mkdir -p $(joinpath(plotsdir(),SDMS_DIR, group, species, y))`)
 
         for s in SSPs
-            run(`mkdir -p $(joinpath(datadir(),SDMS_DIR, group, species, y, s))`)
+            run(`mkdir -p $(joinpath("/scratch", "mcatchen", SDMS_DIR, group, species, y, s))`)
             run(`mkdir -p $(joinpath(plotsdir(),SDMS_DIR, group, species, y, s))`)
 
             theselayers = [geotiff(SimpleSDMPredictor, decorrelated_chelsa_path(y,s,l)) for l in 1:19]
@@ -66,8 +66,8 @@ function fit_and_project(group,species, qc, climate_layers, I)
             prediction = clip(mask(qc,prediction); QCbounds...)
             uncertainty = clip(mask(qc,uncertainty); QCbounds...)
 
-            geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
-            geotiff(joinpath(datadir(), SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
+            geotiff(joinpath("/scratch", "mcatchen", SDMS_DIR, group, species, y, s, "prediction.tif"), prediction)
+            geotiff(joinpath("/scratch", "mcatchen", SDMS_DIR, group, species, y, s, "uncertainty.tif"), uncertainty)
         end
     end
 end

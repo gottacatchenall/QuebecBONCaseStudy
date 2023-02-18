@@ -26,7 +26,7 @@ module QCBON
     const OCCURRENCE_DATA_DIR = "occurrence_clean"
     const OCCURRENCE_TIFS_DIR = "occurrence_tifs"
 
-    const SDMS_DIR = "SDMs"
+    const SDMS_DIR = "QC_SDMs"
 
     const GAUSS_TREE_PARAMS = EvoTreeGaussian(;
         loss=:gaussian,
